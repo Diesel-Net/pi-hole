@@ -1,9 +1,7 @@
-# docker-compose.yaml
-
 version: '3.8'
 services: 
 
-  dns:
+  main:
     image: 'pihole/pihole:latest'
     ports:
       - '53:53/tcp'
@@ -15,10 +13,6 @@ services:
     volumes:
       - '{{ data_dir }}/pihole/:/etc/pihole/'
       - '{{ data_dir }}/dnsmasq/:/etc/dnsmasq.d/'
-    volumes:
-      - '{{ data_dir }}/:/data/'
-    networks:
-      - '{{ docker_network }}'
     deploy:
       mode: replicated
       replicas: 1
@@ -27,6 +21,8 @@ services:
         - traefik.http.services.pihole.loadbalancer.server.port=80
         - traefik.http.routers.pihole.rule=Host(`{{ proxy_domains | join('`,`') }}`)
         - traefik.http.routers.pihole.tls.certresolver=step-ca
+    networks:
+      - {{ docker_network }}
 networks:
   {{ docker_network }}:
     external:
