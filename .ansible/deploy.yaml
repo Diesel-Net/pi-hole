@@ -1,6 +1,6 @@
 # ansible-playbook deploy.yaml -i inventories/dev/hosts --vault-id ~/.tokens/master_id
 
-- hosts: all
+- hosts: tools
   strategy: free
   roles:
     - common
@@ -9,6 +9,16 @@
     - include_role:
         name: common
         tasks_from: make_data_dir
+
+    - name: Ensure subdirectories exist
+      file: 
+        path: '{{ directory }}'
+        state: directory
+      loop_control:
+        loop_var: directory
+      loop:
+        - '{{ data_dir }}/pihole/'
+        - '{{ data_dir }}/dnsmasq/'
 
     - include_role:
         name: docker
