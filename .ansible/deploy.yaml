@@ -23,3 +23,21 @@
     - include_role:
         name: docker
         tasks_from: stack_deploy
+
+    - name: Ensure open ports
+      ufw:
+        rule: allow
+        port: '{{ port }}'
+        proto: any
+      become: yes
+      loop_control:
+        loop_var: port
+      loop:
+        - '53'
+        - '67'
+
+    - name: Reload Firewall and enable at boot
+      ufw:
+        state: enabled
+        policy: deny
+      become: yes

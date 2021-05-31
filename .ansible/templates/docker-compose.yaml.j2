@@ -4,7 +4,7 @@ version: '3.8'
 services: 
 
   dns:
-    image: pihole/pihole:latest
+    image: 'pihole/pihole:latest'
     ports:
       - '53:53/tcp'
       - '53:53/udp'
@@ -17,9 +17,9 @@ services:
       - '{{ data_dir }}/pihole/:/etc/pihole/'
       - '{{ data_dir }}/dnsmasq/:/etc/dnsmasq.d/'
     volumes:
-      - {{ data_dir }}/:/data/
+      - '{{ data_dir }}/:/data/'
     networks:
-      - {{ docker_network }}
+      - '{{ docker_network }}'
     deploy:
       mode: replicated
       replicas: 1
